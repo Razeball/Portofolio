@@ -1,1 +1,25 @@
 @import 'tailwindcss';
+
+@layer utilities {
+    .neon-hover {
+      position: relative;
+    }
+    .neon-hover:hover {
+      animation: neon-glow-cycle 3s linear infinite;
+    }
+  }
+  
+  @keyframes neon-glow-cycle {
+    0% {
+      box-shadow: 0 0 8px #00f7ff, 0 0 16px #00f7ff, 0 0 32px #00f7ff;
+    }
+    33% {
+      box-shadow: 0 0 8px #ff00ff, 0 0 16px #ff00ff, 0 0 32px #ff00ff;
+    }
+    66% {
+      box-shadow: 0 0 8px #00ff00, 0 0 16px #00ff00, 0 0 32px #00ff00;
+    }
+    100% {
+      box-shadow: 0 0 8px #00f7ff, 0 0 16px #00f7ff, 0 0 32px #00f7ff;
+    }
+  }
