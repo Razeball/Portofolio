@@ -14,6 +14,58 @@
 	import dotnet from "./assets/dotnet.svg";
 	import docker from "./assets/docker.svg";
 	import nodejs from "./assets/nodejs.svg";
+	import { onMount } from 'svelte';
+
+	let activeSection = 'home';
+
+		onMount(() => {
+		const setupObserver = () => {
+			const sections = [
+				document.getElementById('home'),
+				document.getElementById('about'),
+				document.getElementById('skills'),
+				document.getElementById('projects'),
+				document.getElementById('contact')
+			];
+
+			
+			if (sections.some(section => !section)) {
+				setTimeout(setupObserver, 50);
+				return;
+			}
+
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						activeSection = entry.target.id;
+					}
+				});
+			}, {
+				threshold: 0.3,
+				rootMargin: '-15% 0px -15% 0px'
+			});
+
+		
+			sections.forEach(section => {
+				if (section) {
+					observer.observe(section);
+				}
+			});
+
+			
+			return () => {
+				sections.forEach(section => {
+					if (section) observer.unobserve(section);
+				});
+			};
+		};
+
+		setupObserver();
+	});
+
+	function isActive(sectionId: string): boolean {
+		return activeSection === sectionId;
+	}
 </script>
 
 <main class="font-sans">
@@ -25,11 +77,12 @@
         <span class="text-xl font-bold text-red-800">Said Rivera</span>
       </a>
       <div class="flex gap-5 text-sm sm:text-base">
-        <a href="#home" class="hover:text-red-800 transition">Home</a>
-        <a href="#about" class="hover:text-red-800 transition">About</a>
-        <a href="#skills" class="hover:text-red-800 transition">Skills</a>
-        <a href="#projects" class="hover:text-red-800 transition">Projects</a>
-        <a href="#contact" class="hover:text-red-800 transition">Contact</a>
+        <a href="#home" class="hover:text-red-800 transition {isActive('home') ? 'text-red-800 border-b-2 border-red-800' : ''}">Home</a>
+        <a href="#about" class="hover:text-red-800 transition {isActive('about') ? 'text-red-800 border-b-2 border-red-800' : ''}">About</a>
+        <a href="#skills" class="hover:text-red-800 transition {isActive('skills') ? 'text-red-800 border-b-2 border-red-800' : ''}">Skills</a>
+        <a href="#projects" class="hover:text-red-800 transition {isActive('projects') ? 'text-red-800 border-b-2 border-red-800' : ''}">Projects</a>
+        <a href="#contact" class="hover:text-red-800 transition {isActive('contact') ? 'text-red-800 border-b-2 border-red-800' : ''}">Contact</a>
+        <span class="text-xs text-gray-500">({activeSection})</span>
       </div>
     </nav>
   </div>
@@ -58,20 +111,104 @@
   </section>
 
   <!-- About -->
-  <section id="about" class="bg-stone-100 py-16 px-6">
-    <div class="max-w-5xl mx-auto">
-      <h1 class="text-4xl text-center text-red-800 font-bold mb-10">About</h1>
-      <div class="md:flex gap-10">
-        <div class="md:w-1/2">
-          <img src={code} alt="Code" class="w-full h-full object-cover rounded-lg">
+  <section id="about" class="bg-stone-100 py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-4xl text-center text-red-800 font-bold mb-16">About Me</h1>
+      
+      <div class="grid lg:grid-cols-2 gap-12 items-center mb-16">
+        <div class="space-y-6">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Passionate Developer</h2>
+            <p class="text-lg text-gray-700 leading-relaxed mb-4">
+              I'm a developer with a passion for creating innovative digital solutions. 
+              My journey in software development has led me through various domains, from web applications 
+              to real-time systems, machine learning etc. If there is something to create and code I will be there.
+            </p>
+            <p class="text-lg text-gray-700 leading-relaxed">
+              I believe in writing clean, maintainable code and making the applications
+              modular so it can grow in the future. Every project is an opportunity to 
+              learn, innovate, and push the boundaries of what's possible. My motto is to be the most efficient
+              possible so I will use every tool in my hand to achieve it.
+            </p>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+              <h3 class="font-bold text-lg text-red-800 mb-3">Experience</h3>
+              <ul class="space-y-2 text-gray-700">
+                <li class="flex items-center">
+                  <span class="w-2 h-2 bg-red-800 rounded-full mr-3"></span>
+                  Fullstack Development
+                </li>
+                <li class="flex items-center">
+                  <span class="w-2 h-2 bg-red-800 rounded-full mr-3"></span>
+                  Real-time Applications
+                </li>
+                <li class="flex items-center">
+                  <span class="w-2 h-2 bg-red-800 rounded-full mr-3"></span>
+                  API Development
+                </li>
+                <li class="flex items-center">
+                  <span class="w-2 h-2 bg-red-800 rounded-full mr-3"></span>
+                  Database Design
+                </li>
+              </ul>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md">
+              <h3 class="font-bold text-lg text-red-800 mb-3">Languages</h3>
+              <ul class="space-y-2 text-gray-700">
+                <li class="flex items-center">
+                  <span class="w-2 h-2 bg-red-800 rounded-full mr-3"></span>
+                  Spanish - Native
+                </li>
+                <li class="flex items-center">
+                  <span class="w-2 h-2 bg-red-800 rounded-full mr-3"></span>
+                  English - Advanced
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="md:w-1/2 text-lg">
-          <p class="mb-4">I enjoy coding in various domains from web development to game development and machine learning. I love building complex and creative solutions.</p>
-          <p class="font-semibold">Languages:</p>
-          <ul class="list-disc list-inside">
-            <li>Spanish - Native</li>
-            <li>English - Advanced</li>
-          </ul>
+        
+        <div class="relative">
+          <img src={code} alt="Code" class="w-full h-96 object-cover rounded-lg shadow-xl">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">What I Do</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <h3 class="font-bold text-lg mb-2">Web Development</h3>
+            <p class="text-gray-600">Building responsive, modern web applications.</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+            <h3 class="font-bold text-lg mb-2">Real-time Systems</h3>
+            <p class="text-gray-600">Creating dynamic, interactive applications.</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+              </svg>
+            </div>
+            <h3 class="font-bold text-lg mb-2">Innovation</h3>
+            <p class="text-gray-600">Exploring emerging technologies like AI/ML and staying ahead of industry trends.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -142,13 +279,29 @@
     <div class="max-w-5xl mx-auto">
       <h1 class="text-4xl text-center text-red-800 font-bold mb-10">Projects</h1>
       <div class="grid md:grid-cols-2 gap-6">
-        <div>
-          <img src={prodoku} alt="Kanban App" class="rounded shadow-xl mb-2 neon-hover">
-          <p class="text-center font-semibold">ProDoku - Kanban & Document App</p>
+        <!-- ProDoku Project -->
+        <div class="bg-white rounded shadow p-6 flex flex-col items-center">
+          <p class="text-2xl font-bold mb-2 text-center">ProDoku</p>
+          <img src={prodoku} alt="ProDoku Kanban App" class="rounded shadow-xl mb-4 neon-hover w-full max-w-xs">
+          <div class="mb-2 text-center text-gray-700">Kanban & Document App</div>
+          <div class="flex flex-wrap gap-2 justify-center mt-2">
+            <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-semibold">Angular</span>
+            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">Node.js/Express</span>
+            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-semibold">WebSockets</span>
+            <span class="bg-sky-100 text-sky-800 px-2 py-1 rounded text-xs font-semibold">Docker</span>
+          </div>
         </div>
-        <div>
-          <img src={sb} alt="E-commerce App" class="rounded shadow-xl mb-2 neon-hover">
-          <p class="text-center font-semibold">SB - E-commerce Application</p>
+        <!-- SB Project -->
+        <div class="bg-white rounded shadow p-6 flex flex-col items-center">
+          <p class="text-2xl font-bold mb-2 text-center">S&B</p>
+          <img src={sb} alt="SB E-commerce App" class="rounded shadow-xl mb-4 neon-hover w-full max-w-xs">
+          <div class="mb-2 text-center text-gray-700">E-commerce Application</div>
+          <div class="flex flex-wrap gap-2 justify-center mt-2">
+            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold">React</span>
+            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">Node.js/Express</span>
+            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-semibold">PostgreSQL</span>
+            <span class="bg-sky-100 text-sky-800 px-2 py-1 rounded text-xs font-semibold">JWS security</span>
+          </div>
         </div>
       </div>
     </div>
