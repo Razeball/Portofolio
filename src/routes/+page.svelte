@@ -5,15 +5,21 @@
 	import logo from "./assets/Logo.svg"
   import code from "./assets/code.png";
 	import prodoku from "./assets/ProDoku.png";
+  import teacherGrader from "./assets/TeacherGrader.png";
 	import github from "./assets/github.svg";
 	import linkedin from "./assets/linkedin.svg";
 	import angular from "./assets/angular.svg";
 	import react from "./assets/react.svg";
 	import svelte from "./assets/svelte.svg";
 	import websocket from "./assets/websocket.svg";
+  import redux from "./assets/redux.svg";
+  import zustand from "./assets/zustand.svg";
 	import dotnet from "./assets/dotnet.svg";
 	import docker from "./assets/docker.svg";
 	import nodejs from "./assets/nodejs.svg";
+  import mcp from "./assets/mcp.png";
+  import machinelearning from "./assets/machinelearning.svg";
+
 	import { onMount } from 'svelte';
 
 	let activeSection = 'home';
@@ -152,6 +158,14 @@
                   <span class="w-2 h-2 bg-red-800 rounded-full mr-3"></span>
                   Database Design
                 </li>
+                <li class="flex items-center">
+                  <span class="w-2 h-2 bg-red-800 rounded-full mr-3"></span>
+                  Deployment & CI/CD
+                </li>
+                <li class="flex items-center">
+                  <span class="w-2 h-2 bg-red-800 rounded-full mr-3"></span>
+                  Machine Learning
+                </li>
               </ul>
             </div>
             
@@ -241,6 +255,16 @@
             <p class="font-bold text-lg">WebSockets</p>
             <p class="text-sm text-gray-600">Real-time communication</p>
           </div>
+          <div class="bg-white border rounded shadow p-4 hover:border-purple-800 transition hover:bg-purple-100 hover:border-2">
+            <img src={redux} alt="Redux" class="w-6 h-6">
+            <p class="font-bold text-lg">Redux</p>
+            <p class="text-sm text-gray-600">State management</p>
+          </div>
+          <div class="bg-white border rounded shadow p-4 hover:border-amber-800 transition hover:bg-amber-100 hover:border-2">
+            <img src={zustand} alt="Zustand" class="w-6 h-6">
+            <p class="font-bold text-lg">Zustand</p>
+            <p class="text-sm text-gray-600">State management</p>
+          </div>
           <div class="bg-white border rounded shadow p-4 hover:border-black transition hover:bg-black/25 hover:border-2">
             <img src={nodejs} alt="Node.js" class="w-6 h-6">
             <p class="font-bold text-lg">Node.js / Express</p>
@@ -256,16 +280,22 @@
             <p class="font-bold text-lg">Docker</p>
             <p class="text-sm text-gray-600">Containerization</p>
           </div>
+          <div class="bg-white border rounded shadow p-4 hover:border-indigo-800 transition hover:bg-indigo-100 hover:border-2">
+            <img src={mcp} alt="MCP" class="w-6 h-6">
+            <p class="font-bold text-lg">MCP</p>
+            <p class="text-sm text-gray-600">Model Context Protocol</p>
+          </div>
+          <div class="bg-white border rounded shadow p-4 hover:border-gray-800 transition hover:bg-gray-100 hover:border-2">
+            <img src={machinelearning} alt="Machine Learning" class="w-6 h-6">
+            <p class="font-bold text-lg">Machine Learning</p>
+            <p class="text-sm text-gray-600">Deep Learning | Python | TensorFlow</p>
+          </div>
         </div>
         <div class="mt-8">
           <p class="font-semibold mb-4 text-lg">Technologies I'm Learning</p>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl mx-auto">
-            <div class="bg-white border rounded shadow p-3 hover:border-blue-600 transition hover:bg-blue-50 hover:border-2">
-              <p class="font-bold">MCP</p>
-              <p class="text-sm text-gray-600">Model Context Protocol</p>
-            </div>
+          <div class="grid grid-cols-1 md:grid-cols-1 gap-3 max-w-2xl mx-auto">
             <div class="bg-white border rounded shadow p-3 hover:border-green-600 transition hover:bg-green-50 hover:border-2">
-              <p class="font-bold">Training Models</p>
+              <p class="font-bold">Generative AI</p>
               <p class="text-sm text-gray-600">Machine Learning</p>
             </div>
           </div>
@@ -282,7 +312,7 @@
         <!-- ProDoku Project -->
         <div class="bg-white rounded shadow p-6 flex flex-col items-center">
           <p class="text-2xl font-bold mb-2 text-center">ProDoku</p>
-          <img src={prodoku} alt="ProDoku Kanban App" class="rounded shadow-xl mb-4 neon-hover w-full max-w-xs">
+          <img src={prodoku} alt="ProDoku Kanban App" class="rounded shadow-xl mb-4 neon-hover w-full max-w-xs cursor-pointer" on:click={() => window.open('https://github.com/Razeball/KanbanApp')}>
           <div class="mb-2 text-center text-gray-700">Kanban & Document App</div>
           <div class="flex flex-wrap gap-2 justify-center mt-2">
             <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-semibold">Angular</span>
@@ -294,13 +324,25 @@
         <!-- SB Project -->
         <div class="bg-white rounded shadow p-6 flex flex-col items-center">
           <p class="text-2xl font-bold mb-2 text-center">S&B</p>
-          <img src={sb} alt="SB E-commerce App" class="rounded shadow-xl mb-4 neon-hover w-full max-w-xs">
+          <img src={sb} alt="SB E-commerce App" class="rounded shadow-xl mb-4 neon-hover w-full max-w-xs cursor-pointer">
           <div class="mb-2 text-center text-gray-700">E-commerce Application</div>
           <div class="flex flex-wrap gap-2 justify-center mt-2">
             <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold">React</span>
             <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">Node.js/Express</span>
             <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-semibold">PostgreSQL</span>
             <span class="bg-sky-100 text-sky-800 px-2 py-1 rounded text-xs font-semibold">JWS security</span>
+          </div>
+        </div>
+        <!-- Teacher Grader Project -->
+        <div class="bg-white rounded shadow p-6 flex flex-col items-center">
+          <p class="text-2xl font-bold mb-2 text-center">Teacher Grader</p>
+          <img src={teacherGrader} alt="Teacher Grader App" class="rounded shadow-xl mb-4 neon-hover w-full max-w-xs cursor-pointer" on:click={() => window.open('https://github.com/Razeball/TeacherGraderExe')}>
+          <div class="mb-2 text-center text-gray-700">Grading App for teachers</div>
+          <div class="flex flex-wrap gap-2 justify-center mt-2">
+            <span class="bg-black/10 text-black/80 px-2 py-1 rounded text-xs font-semibold">Next.js</span>
+            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">Node.js/Express</span>
+            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-semibold">Electron</span>
+            <span class="bg-sky-100 text-sky-800 px-2 py-1 rounded text-xs font-semibold">Sqlite</span>
           </div>
         </div>
       </div>
