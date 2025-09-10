@@ -1,30 +1,48 @@
 <script lang="ts">
 	import '../app.css';
-	import profile from "./assets/Profile.jpg";
-	import sb from "./assets/SB.png";
-	import logo from "./assets/Logo.svg"
-  import code from "./assets/code.png";
-	import prodoku from "./assets/ProDoku.png";
-  import teacherGrader from "./assets/TeacherGrader.png";
-	import github from "./assets/github.svg";
-	import linkedin from "./assets/linkedin.svg";
-	import angular from "./assets/angular.svg";
-	import react from "./assets/react.svg";
-	import svelte from "./assets/svelte.svg";
-	import websocket from "./assets/websocket.svg";
-  import redux from "./assets/redux.svg";
-  import zustand from "./assets/zustand.svg";
-	import dotnet from "./assets/dotnet.svg";
-	import docker from "./assets/docker.svg";
-	import nodejs from "./assets/nodejs.svg";
-  import mcp from "./assets/mcp.png";
-  import machinelearning from "./assets/machinelearning.svg";
-
-	import { onMount } from 'svelte';
+	import { assets } from '../lib/assets';
+	import { onMount, onDestroy } from 'svelte';
 
 	let activeSection = 'home';
+	let mounted = false;
+	let skillsVisible = false;
+	let skillsExpanded = false;
+	let projectsVisible = false;
+	let aboutVisible = false;
 
-		onMount(() => {
+	
+	let currentSlide = 0;
+	let totalSlides = 3;
+	let carouselInterval: number;
+
+	
+	let showTyping = false;
+	let typedText = '';
+	let fullText = 'Fullstack Developer';
+	let typingIndex = 0;
+	let showHeroImage = false;
+	
+	
+	let skillCards: HTMLElement[] = [];
+	let skillAnimationTimeout: number;
+
+	onMount(() => {
+		mounted = true;
+		
+		
+		activeSection = 'home';
+		
+		
+		setTimeout(() => {
+			showTyping = true;
+			startTypingEffect();
+		}, 1000);
+
+		
+		setTimeout(() => {
+			showHeroImage = true;
+		}, 1800);
+
 		const setupObserver = () => {
 			const sections = [
 				document.getElementById('home'),
@@ -34,7 +52,6 @@
 				document.getElementById('contact')
 			];
 
-			
 			if (sections.some(section => !section)) {
 				setTimeout(setupObserver, 50);
 				return;
@@ -44,14 +61,38 @@
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
 						activeSection = entry.target.id;
+						
+						
+						if (entry.target.id === 'skills' && !skillsVisible) {
+							skillsVisible = true;
+							
+							setTimeout(() => {
+								skillsExpanded = true;
+								
+								animateSkillCards();
+							}, 300);
+						}
+						if (entry.target.id === 'projects' && !projectsVisible) {
+							projectsVisible = true;
+							startCarousel();
+							
+							setTimeout(() => {
+								const cards = document.querySelectorAll('.project-card');
+								cards.forEach((card, index) => {
+									setTimeout(() => {
+										card.classList.add('visible');
+									}, index * 200);
+								});
+							}, 300);
+						}
+						if (entry.target.id === 'about') aboutVisible = true;
 					}
 				});
 			}, {
-				threshold: 0.3,
-				rootMargin: '-15% 0px -15% 0px'
+				threshold: 0.5,
+				rootMargin: '-10% 0px -10% 0px'
 			});
 
-		
 			sections.forEach(section => {
 				if (section) {
 					observer.observe(section);
@@ -59,78 +100,163 @@
 			});
 
 			
+			const revealElements = document.querySelectorAll('.reveal');
+			const revealObserver = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('active');
+					}
+				});
+			}, { threshold: 0.1 });
+
+			revealElements.forEach(el => revealObserver.observe(el));
+
 			return () => {
 				sections.forEach(section => {
 					if (section) observer.unobserve(section);
 				});
+				revealElements.forEach(el => revealObserver.unobserve(el));
 			};
 		};
 
 		setupObserver();
 	});
 
+	onDestroy(() => {
+		if (carouselInterval) {
+			clearInterval(carouselInterval);
+		}
+	});
+
+	function startCarousel() {
+		
+		carouselInterval = setInterval(() => {
+			nextSlide();
+		}, 5000);
+	}
+
+	function stopCarousel() {
+		if (carouselInterval) {
+			clearInterval(carouselInterval);
+		}
+	}
+
+	function nextSlide() {
+		currentSlide = (currentSlide + 1) % totalSlides;
+	}
+
+	function prevSlide() {
+		currentSlide = currentSlide === 0 ? totalSlides - 1 : currentSlide - 1;
+	}
+
+	function goToSlide(index: number) {
+		currentSlide = index;
+	}
+
+	function animateSkillCards() {
+		const cards = document.querySelectorAll('.skill-card');
+		cards.forEach((card, index) => {
+			setTimeout(() => {
+				card.classList.add('animate');
+			}, index * 100);
+		});
+	}
+
 	function isActive(sectionId: string): boolean {
 		return activeSection === sectionId;
+	}
+
+	function startTypingEffect() {
+		const typeChar = () => {
+			if (typingIndex < fullText.length) {
+				typedText += fullText[typingIndex];
+				typingIndex++;
+				setTimeout(typeChar, 100); 
+			}
+		};
+		typeChar();
+	}
+
+	function handleProjectClick(url: string) {
+		window.open(url, '_blank');
+	}
+
+	function handleKeyPress(event: KeyboardEvent, url: string) {
+		if (event.key === 'Enter' || event.key === ' ') {
+			event.preventDefault();
+			handleProjectClick(url);
+		}
 	}
 </script>
 
 <main class="font-sans">
   <!-- Navbar -->
-  <div class="bg-stone-200 shadow-md mb-4 sticky top-0 z-50">
+  <div class="bg-stone-200 shadow-md mb-4 sticky top-0 z-50 navbar-slide">
     <nav class="flex justify-between items-center p-4 max-w-7xl mx-auto">
-      <a href="#home" class="flex items-center gap-2">
-        <img src={logo} alt="Logo" class="w-10 h-10">
-        <span class="text-xl font-bold text-red-800">Said Rivera</span>
+      <a href="#home" class="flex items-center gap-2 hover-lift">
+        <img src={assets.logo} alt="Logo" class="w-10 h-10 {mounted ? 'bounce-in' : ''}">
+        <span class="text-xl font-bold text-red-800 {mounted ? 'slide-in-left delay-200' : ''}">Said Rivera</span>
       </a>
       <div class="flex gap-5 text-sm sm:text-base">
-        <a href="#home" class="hover:text-red-800 transition {isActive('home') ? 'text-red-800 border-b-2 border-red-800' : ''}">Home</a>
-        <a href="#about" class="hover:text-red-800 transition {isActive('about') ? 'text-red-800 border-b-2 border-red-800' : ''}">About</a>
-        <a href="#skills" class="hover:text-red-800 transition {isActive('skills') ? 'text-red-800 border-b-2 border-red-800' : ''}">Skills</a>
-        <a href="#projects" class="hover:text-red-800 transition {isActive('projects') ? 'text-red-800 border-b-2 border-red-800' : ''}">Projects</a>
-        <a href="#contact" class="hover:text-red-800 transition {isActive('contact') ? 'text-red-800 border-b-2 border-red-800' : ''}">Contact</a>
-        <span class="text-xs text-gray-500">({activeSection})</span>
+        <a href="#home" class="nav-link hover:text-red-800 transition-all duration-300 transform hover:scale-110 {isActive('home') ? 'active' : ''} {mounted ? 'fade-in delay-300' : ''}">Home</a>
+        <a href="#about" class="nav-link hover:text-red-800 transition-all duration-300 transform hover:scale-110 {isActive('about') ? 'active' : ''} {mounted ? 'fade-in delay-400' : ''}">About</a>
+        <a href="#skills" class="nav-link hover:text-red-800 transition-all duration-300 transform hover:scale-110 {isActive('skills') ? 'active' : ''} {mounted ? 'fade-in delay-500' : ''}">Skills</a>
+        <a href="#projects" class="nav-link hover:text-red-800 transition-all duration-300 transform hover:scale-110 {isActive('projects') ? 'active' : ''} {mounted ? 'fade-in delay-600' : ''}">Projects</a>
+        <a href="#contact" class="nav-link hover:text-red-800 transition-all duration-300 transform hover:scale-110 {isActive('contact') ? 'active' : ''} {mounted ? 'fade-in delay-700' : ''}">Contact</a>
       </div>
     </nav>
   </div>
 
   <!-- Hero Section -->
-  <section id="home" class="bg-white py-20">
+  <section id="home" class="bg-white py-20 reserved-space-hero">
     <div class="flex flex-col md:flex-row items-center max-w-7xl mx-auto px-6 gap-10">
       <div class="md:w-1/2">
-        <h1 class="text-5xl font-extrabold mb-4 leading-tight">Hi, I'm <span class="text-red-800">Said Rivera</span></h1>
-        <h2 class="text-3xl font-semibold mb-4">Fullstack Developer</h2>
-        <p class="text-lg mb-6 max-w-xl">I'm a fullstack developer experienced in React, Angular, Svelte, Node.js and .NET. I focus on building efficient and scalable applications.</p>
-        <a href="#contact" class="inline-block bg-red-800 text-white px-5 py-2 rounded hover:bg-red-700 active:bg-red-900 transition">Contact</a>
-        <div class="flex gap-4 mt-4">
-          <a href="https://github.com/Razeball" target="_blank" class="hover:text-red-800">
-            <img src={github} alt="GitHub" class="w-6 h-6">
+        <h1 class="text-5xl font-extrabold mb-4 leading-tight no-shift {mounted ? 'visible slide-in-left' : ''}">
+          Hi, I'm <span class="text-gradient">Said Rivera</span>
+        </h1>
+        <div class="h-16 mb-4">
+          <h2 class="text-3xl font-semibold no-shift {mounted ? 'visible slide-in-left delay-200' : ''}">
+            {#if showTyping}
+              <span class="typing-cursor">{typedText}<span class="blinking-cursor">|</span></span>
+            {/if}
+          </h2>
+        </div>
+        <p class="text-lg mb-6 max-w-xl no-shift {mounted ? 'visible slide-in-left delay-400' : ''}">
+          I'm a fullstack developer experienced in React, Angular, Svelte, Node.js and .NET. I focus on building efficient and scalable applications.
+        </p>
+        <a href="#contact" class="inline-block bg-red-800 text-white px-5 py-2 rounded hover:bg-red-700 active:bg-red-900 transition-all duration-300 transform hover:scale-105 hover:shadow-lg no-shift {mounted ? 'visible scale-in delay-600' : ''}">
+          Contact
+        </a>
+        <div class="flex gap-4 mt-4 no-shift {mounted ? 'visible fade-in delay-800' : ''}">
+          <a href="https://github.com/Razeball" target="_blank" class="hover:text-red-800 transition-all duration-300 transform hover:scale-125 hover:-rotate-12">
+            <img src={assets.github} alt="GitHub" class="w-6 h-6">
           </a>
-          <a href="https://www.linkedin.com/in/said-rivera-444992308" target="_blank" class="hover:text-red-800">
-            <img src={linkedin} alt="LinkedIn" class="w-6 h-6">
+          <a href="https://www.linkedin.com/in/said-rivera-444992308" target="_blank" class="hover:text-red-800 transition-all duration-300 transform hover:scale-125 hover:rotate-12">
+            <img src={assets.linkedin} alt="LinkedIn" class="w-6 h-6">
           </a>
         </div>
       </div>
       <div class="md:w-1/2">
-        <img src={profile} alt="Profile" class="rounded shadow-md max-h-96 w-full object-cover">
+        <img src={assets.profile} alt="Profile" class="rounded shadow-md max-h-96 w-full object-cover hover-lift slide-in-from-right {showHeroImage ? 'visible' : ''}">
       </div>
     </div>
   </section>
 
   <!-- About -->
-  <section id="about" class="bg-stone-100 py-20 px-6">
+  <section id="about" class="bg-stone-100 py-20 px-6 reserved-space-about">
     <div class="max-w-6xl mx-auto">
-      <h1 class="text-4xl text-center text-red-800 font-bold mb-16">About Me</h1>
+      <h1 class="text-4xl text-center text-red-800 font-bold mb-16 reveal">About Me</h1>
       
       <div class="grid lg:grid-cols-2 gap-12 items-center mb-16">
         <div class="space-y-6">
-          <div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Passionate Developer</h2>
-            <p class="text-lg text-gray-700 leading-relaxed mb-4">
+          <div class="reveal">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 no-shift {aboutVisible ? 'visible slide-in-left' : ''}">Passionate Developer</h2>
+            <p class="text-lg text-gray-700 leading-relaxed mb-4 no-shift {aboutVisible ? 'visible slide-in-left delay-200' : ''}">
               I'm a developer with a passion for creating innovative digital solutions. 
               My journey in software development has led me through various domains, from web applications 
               to real-time systems, machine learning etc. If there is something to create and code I will be there.
             </p>
-            <p class="text-lg text-gray-700 leading-relaxed">
+            <p class="text-lg text-gray-700 leading-relaxed no-shift {aboutVisible ? 'visible slide-in-left delay-300' : ''}">
               I believe in writing clean, maintainable code and making the applications
               modular so it can grow in the future. Every project is an opportunity to 
               learn, innovate, and push the boundaries of what's possible. My motto is to be the most efficient
@@ -139,7 +265,7 @@
           </div>
           
           <div class="grid md:grid-cols-2 gap-6">
-            <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="bg-white p-6 rounded-lg shadow-md hover-lift no-shift {aboutVisible ? 'visible scale-in delay-400' : ''}">
               <h3 class="font-bold text-lg text-red-800 mb-3">Experience</h3>
               <ul class="space-y-2 text-gray-700">
                 <li class="flex items-center">
@@ -169,7 +295,7 @@
               </ul>
             </div>
             
-            <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="bg-white p-6 rounded-lg shadow-md hover-lift no-shift {aboutVisible ? 'visible scale-in delay-500' : ''}">
               <h3 class="font-bold text-lg text-red-800 mb-3">Languages</h3>
               <ul class="space-y-2 text-gray-700">
                 <li class="flex items-center">
@@ -185,17 +311,17 @@
           </div>
         </div>
         
-        <div class="relative">
-          <img src={code} alt="Code" class="w-full h-96 object-cover rounded-lg shadow-xl">
+        <div class="relative no-shift {aboutVisible ? 'visible slide-in-right delay-300' : ''}">
+          <img src={assets.code} alt="Code" class="w-full h-96 object-cover rounded-lg shadow-xl hover-lift">
           <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
         </div>
       </div>
       
-      <div class="bg-white rounded-lg shadow-lg p-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">What I Do</h2>
+      <div class="bg-white rounded-lg shadow-lg p-8 reveal">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center no-shift {aboutVisible ? 'visible fade-in delay-600' : ''}">What I Do</h2>
         <div class="grid md:grid-cols-3 gap-8">
-          <div class="text-center">
-            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div class="text-center no-shift {aboutVisible ? 'visible bounce-in delay-700' : ''}">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 hover-lift">
               <svg class="w-8 h-8 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
               </svg>
@@ -204,8 +330,8 @@
             <p class="text-gray-600">Building responsive, modern web applications.</p>
           </div>
           
-          <div class="text-center">
-            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div class="text-center no-shift {aboutVisible ? 'visible bounce-in delay-800' : ''}">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 hover-lift">
               <svg class="w-8 h-8 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
               </svg>
@@ -214,8 +340,8 @@
             <p class="text-gray-600">Creating dynamic, interactive applications.</p>
           </div>
           
-          <div class="text-center">
-            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div class="text-center no-shift {aboutVisible ? 'visible bounce-in delay-900' : ''}">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 hover-lift">
               <svg class="w-8 h-8 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
               </svg>
@@ -229,72 +355,77 @@
   </section>
 
   <!-- Skills -->
-  <section id="skills" class="py-16 px-6">
+  <section id="skills" class="py-16 px-6 reserved-space-skills">
     <div class="max-w-5xl mx-auto">
-      <h1 class="text-4xl text-center text-red-800 font-bold mb-10">Skills</h1>
+      <h1 class="text-4xl text-center text-red-800 font-bold mb-10 reveal">Skills</h1>
       <div class="text-center">
-        <p class="text-xl font-semibold mb-6">Technologies I Use</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-          <div class="bg-white border rounded shadow p-4 hover:border-rose-800 transition hover:bg-rose-100 hover:border-2">
-            <img src={angular} alt="Angular" class="w-6 h-6">
-            <p class="font-bold text-lg">Angular</p>
-            <p class="text-sm text-gray-600">Frontend framework</p>
-          </div>
-          <div class="bg-white border rounded shadow p-4 hover:border-blue-800 transition hover:bg-blue-100 hover:border-2">
-            <img src={react} alt="React" class="w-6 h-6">
-            <p class="font-bold text-lg">React</p>
-            <p class="text-sm text-gray-600">Frontend library</p>
-          </div>
-          <div class="bg-white border rounded shadow p-4 hover:border-orange-600 transition hover:bg-orange-100 hover:border-2">
-            <img src={svelte} alt="Svelte" class="w-6 h-6">
-            <p class="font-bold text-lg">Svelte</p>
-            <p class="text-sm text-gray-600">Frontend framework</p>
-          </div>
-          <div class="bg-white border rounded shadow p-4 hover:border-green-800 transition hover:bg-green-100 hover:border-2">
-            <img src={websocket} alt="WebSockets" class="w-6 h-6">
-            <p class="font-bold text-lg">WebSockets</p>
-            <p class="text-sm text-gray-600">Real-time communication</p>
-          </div>
-          <div class="bg-white border rounded shadow p-4 hover:border-purple-800 transition hover:bg-purple-100 hover:border-2">
-            <img src={redux} alt="Redux" class="w-6 h-6">
-            <p class="font-bold text-lg">Redux</p>
-            <p class="text-sm text-gray-600">State management</p>
-          </div>
-          <div class="bg-white border rounded shadow p-4 hover:border-amber-800 transition hover:bg-amber-100 hover:border-2">
-            <img src={zustand} alt="Zustand" class="w-6 h-6">
-            <p class="font-bold text-lg">Zustand</p>
-            <p class="text-sm text-gray-600">State management</p>
-          </div>
-          <div class="bg-white border rounded shadow p-4 hover:border-black transition hover:bg-black/25 hover:border-2">
-            <img src={nodejs} alt="Node.js" class="w-6 h-6">
-            <p class="font-bold text-lg">Node.js / Express</p>
-            <p class="text-sm text-gray-600">Backend development</p>
-          </div>
-          <div class="bg-white border rounded shadow p-4 hover:border-purple-800 transition hover:bg-purple-100 hover:border-2">
-            <img src={dotnet} alt=".NET" class="w-6 h-6">
-            <p class="font-bold text-lg">.NET</p>
-            <p class="text-sm text-gray-600">Backend development</p>
-          </div>
-          <div class="bg-white border rounded shadow p-4 hover:border-sky-800 transition hover:bg-sky-100 hover:border-2">
-            <img src={docker} alt="Docker" class="w-6 h-6">
-            <p class="font-bold text-lg">Docker</p>
-            <p class="text-sm text-gray-600">Containerization</p>
-          </div>
-          <div class="bg-white border rounded shadow p-4 hover:border-indigo-800 transition hover:bg-indigo-100 hover:border-2">
-            <img src={mcp} alt="MCP" class="w-6 h-6">
-            <p class="font-bold text-lg">MCP</p>
-            <p class="text-sm text-gray-600">Model Context Protocol</p>
-          </div>
-          <div class="bg-white border rounded shadow p-4 hover:border-gray-800 transition hover:bg-gray-100 hover:border-2">
-            <img src={machinelearning} alt="Machine Learning" class="w-6 h-6">
-            <p class="font-bold text-lg">Machine Learning</p>
-            <p class="text-sm text-gray-600">Deep Learning | Python | TensorFlow</p>
+        <p class="text-xl font-semibold mb-6 reveal">Technologies I Use</p>
+        
+\
+        <div class="skills-container {skillsExpanded ? 'expanded' : ''}">
+          <div class="skills-grid {skillsExpanded ? 'visible' : ''} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+            <div class="bg-white border rounded shadow p-4 skill-card hover:border-rose-800 transition hover:bg-rose-100 hover:border-2">
+              <img src={assets.angular} alt="Angular" class="w-6 h-6">
+              <p class="font-bold text-lg">Angular</p>
+              <p class="text-sm text-gray-600">Frontend framework</p>
+            </div>
+            <div class="bg-white border rounded shadow p-4 skill-card hover:border-blue-800 transition hover:bg-blue-100 hover:border-2">
+              <img src={assets.react} alt="React" class="w-6 h-6">
+              <p class="font-bold text-lg">React</p>
+              <p class="text-sm text-gray-600">Frontend library</p>
+            </div>
+            <div class="bg-white border rounded shadow p-4 skill-card hover:border-orange-600 transition hover:bg-orange-100 hover:border-2">
+              <img src={assets.svelte} alt="Svelte" class="w-6 h-6">
+              <p class="font-bold text-lg">Svelte</p>
+              <p class="text-sm text-gray-600">Frontend framework</p>
+            </div>
+            <div class="bg-white border rounded shadow p-4 skill-card hover:border-green-800 transition hover:bg-green-100 hover:border-2">
+              <img src={assets.websocket} alt="WebSockets" class="w-6 h-6">
+              <p class="font-bold text-lg">WebSockets</p>
+              <p class="text-sm text-gray-600">Real-time communication</p>
+            </div>
+            <div class="bg-white border rounded shadow p-4 skill-card hover:border-purple-800 transition hover:bg-purple-100 hover:border-2">
+              <img src={assets.redux} alt="Redux" class="w-6 h-6">
+              <p class="font-bold text-lg">Redux</p>
+              <p class="text-sm text-gray-600">State management</p>
+            </div>
+            <div class="bg-white border rounded shadow p-4 skill-card hover:border-amber-800 transition hover:bg-amber-100 hover:border-2">
+              <img src={assets.zustand} alt="Zustand" class="w-6 h-6">
+              <p class="font-bold text-lg">Zustand</p>
+              <p class="text-sm text-gray-600">State management</p>
+            </div>
+            <div class="bg-white border rounded shadow p-4 skill-card hover:border-black transition hover:bg-black/25 hover:border-2">
+              <img src={assets.nodejs} alt="Node.js" class="w-6 h-6">
+              <p class="font-bold text-lg">Node.js / Express</p>
+              <p class="text-sm text-gray-600">Backend development</p>
+            </div>
+            <div class="bg-white border rounded shadow p-4 skill-card hover:border-purple-800 transition hover:bg-purple-100 hover:border-2">
+              <img src={assets.dotnet} alt=".NET" class="w-6 h-6">
+              <p class="font-bold text-lg">.NET</p>
+              <p class="text-sm text-gray-600">Backend development</p>
+            </div>
+            <div class="bg-white border rounded shadow p-4 skill-card hover:border-sky-800 transition hover:bg-sky-100 hover:border-2">
+              <img src={assets.docker} alt="Docker" class="w-6 h-6">
+              <p class="font-bold text-lg">Docker</p>
+              <p class="text-sm text-gray-600">Containerization</p>
+            </div>
+            <div class="bg-white border rounded shadow p-4 skill-card hover:border-indigo-800 transition hover:bg-indigo-100 hover:border-2">
+              <img src={assets.mcp} alt="MCP" class="w-6 h-6">
+              <p class="font-bold text-lg">MCP</p>
+              <p class="text-sm text-gray-600">Model Context Protocol</p>
+            </div>
+            <div class="bg-white border rounded shadow p-4 skill-card hover:border-gray-800 transition hover:bg-gray-100 hover:border-2">
+              <img src={assets.machinelearning} alt="Machine Learning" class="w-6 h-6">
+              <p class="font-bold text-lg">Machine Learning</p>
+              <p class="text-sm text-gray-600">Deep Learning | Python | TensorFlow</p>
+            </div>
           </div>
         </div>
+        
         <div class="mt-8">
-          <p class="font-semibold mb-4 text-lg">Technologies I'm Learning</p>
+          <p class="font-semibold mb-4 text-lg reveal">Technologies I'm Learning</p>
           <div class="grid grid-cols-1 md:grid-cols-1 gap-3 max-w-2xl mx-auto">
-            <div class="bg-white border rounded shadow p-3 hover:border-green-600 transition hover:bg-green-50 hover:border-2">
+            <div class="bg-white border rounded shadow p-3 skill-card hover:border-green-600 transition hover:bg-green-50 hover:border-2 {skillsExpanded ? 'animate' : ''}" style="animation-delay: 1.2s;">
               <p class="font-bold">Generative AI</p>
               <p class="text-sm text-gray-600">Machine Learning</p>
             </div>
@@ -305,63 +436,153 @@
   </section>
 
   <!-- Projects -->
-  <section id="projects" class="py-16 px-6 bg-stone-100">
-    <div class="max-w-5xl mx-auto">
-      <h1 class="text-4xl text-center text-red-800 font-bold mb-10">Projects</h1>
-      <div class="grid md:grid-cols-2 gap-6">
-        <!-- ProDoku Project -->
-        <div class="bg-white rounded shadow p-6 flex flex-col items-center">
-          <p class="text-2xl font-bold mb-2 text-center">ProDoku</p>
-          <img src={prodoku} alt="ProDoku Kanban App" class="rounded shadow-xl mb-4 neon-hover w-full max-w-xs cursor-pointer" on:click={() => window.open('https://github.com/Razeball/KanbanApp')}>
-          <div class="mb-2 text-center text-gray-700">Kanban & Document App</div>
-          <div class="flex flex-wrap gap-2 justify-center mt-2">
-            <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-semibold">Angular</span>
-            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">Node.js/Express</span>
-            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-semibold">WebSockets</span>
-            <span class="bg-sky-100 text-sky-800 px-2 py-1 rounded text-xs font-semibold">Docker</span>
+  <section id="projects" class="py-16 px-6 bg-stone-100 reserved-space-projects">
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-4xl text-center text-red-800 font-bold mb-10 reveal">Projects</h1>
+      
+
+      <div class="carousel-container relative">
+        <div 
+          class="carousel-track"
+          style="transform: translateX(-{currentSlide * 33.333}%)"
+          role="region"
+          aria-label="Projects carousel"
+          on:mouseenter={stopCarousel}
+          on:mouseleave={startCarousel}
+        >
+          <!-- ProDoku Project -->
+          <div class="carousel-slide">
+            <div class="bg-white rounded-lg shadow-lg p-8 project-card {projectsVisible ? '' : ''}"
+                 role="button"
+                 tabindex="0"
+                 on:click={() => handleProjectClick('https://github.com/Razeball/KanbanApp')}
+                 on:keypress={(e) => handleKeyPress(e, 'https://github.com/Razeball/KanbanApp')}>
+              <div class="flex flex-col lg:flex-row items-center gap-8">
+                <div class="lg:w-1/2">
+                  <h2 class="text-3xl font-bold mb-4 text-center lg:text-left text-red-800">ProDoku</h2>
+                  <p class="text-xl text-gray-700 mb-4 text-center lg:text-left">Kanban & Document Management App</p>
+                  <p class="text-gray-600 mb-6 leading-relaxed">
+                    A comprehensive project management application that combines Kanban boards with document management. 
+                    Built with real-time collaboration features using WebSockets, allowing teams to work together seamlessly.
+                  </p>
+                  <div class="flex flex-wrap gap-2 justify-center lg:justify-start">
+                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold">Angular</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">Node.js/Express</span>
+                    <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold">WebSockets</span>
+                    <span class="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-semibold">Docker</span>
+                  </div>
+                </div>
+                <div class="lg:w-1/2">
+                  <img src={assets.prodoku} alt="ProDoku Kanban App" class="rounded-lg shadow-xl w-full max-w-md mx-auto hover-lift">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- SB Project -->
+          <div class="carousel-slide">
+            <div class="bg-white rounded-lg shadow-lg p-8 project-card">
+              <div class="flex flex-col lg:flex-row items-center gap-8">
+                <div class="lg:w-1/2">
+                  <h2 class="text-3xl font-bold mb-4 text-center lg:text-left text-red-800">S&B</h2>
+                  <p class="text-xl text-gray-700 mb-4 text-center lg:text-left">E-commerce Platform</p>
+                  <p class="text-gray-600 mb-6 leading-relaxed">
+                    A modern e-commerce application featuring user authentication, product catalog, shopping cart, 
+                    and secure payment processing. Built with React and secured with JWT authentication.
+                  </p>
+                  <div class="flex flex-wrap gap-2 justify-center lg:justify-start">
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">React</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">Node.js/Express</span>
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold">PostgreSQL</span>
+                    <span class="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-semibold">JWT Security</span>
+                  </div>
+                </div>
+                <div class="lg:w-1/2">
+                  <img src={assets.sb} alt="SB E-commerce App" class="rounded-lg shadow-xl w-full max-w-md mx-auto hover-lift">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Teacher Grader Project -->
+          <div class="carousel-slide">
+            <div class="bg-white rounded-lg shadow-lg p-8 project-card"
+                 role="button"
+                 tabindex="0"
+                 on:click={() => handleProjectClick('https://github.com/Razeball/TeacherGraderExe')}
+                 on:keypress={(e) => handleKeyPress(e, 'https://github.com/Razeball/TeacherGraderExe')}>
+              <div class="flex flex-col lg:flex-row items-center gap-8">
+                <div class="lg:w-1/2">
+                  <h2 class="text-3xl font-bold mb-4 text-center lg:text-left text-red-800">Teacher Grader</h2>
+                  <p class="text-xl text-gray-700 mb-4 text-center lg:text-left">Desktop Grading Application</p>
+                  <p class="text-gray-600 mb-6 leading-relaxed">
+                    A desktop application built with Electron for teachers to efficiently grade student assignments. 
+                    Features local data storage with SQLite and an intuitive interface built with Next.js.
+                  </p>
+                  <div class="flex flex-wrap gap-2 justify-center lg:justify-start">
+                    <span class="bg-black/10 text-black/80 px-3 py-1 rounded-full text-sm font-semibold">Next.js</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">Node.js/Express</span>
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold">Electron</span>
+                    <span class="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-semibold">SQLite</span>
+                  </div>
+                </div>
+                <div class="lg:w-1/2">
+                  <img src={assets.teacherGrader} alt="Teacher Grader App" class="rounded-lg shadow-xl w-full max-w-md mx-auto hover-lift">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <!-- SB Project -->
-        <div class="bg-white rounded shadow p-6 flex flex-col items-center">
-          <p class="text-2xl font-bold mb-2 text-center">S&B</p>
-          <img src={sb} alt="SB E-commerce App" class="rounded shadow-xl mb-4 neon-hover w-full max-w-xs cursor-pointer">
-          <div class="mb-2 text-center text-gray-700">E-commerce Application</div>
-          <div class="flex flex-wrap gap-2 justify-center mt-2">
-            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold">React</span>
-            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">Node.js/Express</span>
-            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-semibold">PostgreSQL</span>
-            <span class="bg-sky-100 text-sky-800 px-2 py-1 rounded text-xs font-semibold">JWS security</span>
-          </div>
-        </div>
-        <!-- Teacher Grader Project -->
-        <div class="bg-white rounded shadow p-6 flex flex-col items-center">
-          <p class="text-2xl font-bold mb-2 text-center">Teacher Grader</p>
-          <img src={teacherGrader} alt="Teacher Grader App" class="rounded shadow-xl mb-4 neon-hover w-full max-w-xs cursor-pointer" on:click={() => window.open('https://github.com/Razeball/TeacherGraderExe')}>
-          <div class="mb-2 text-center text-gray-700">Grading App for teachers</div>
-          <div class="flex flex-wrap gap-2 justify-center mt-2">
-            <span class="bg-black/10 text-black/80 px-2 py-1 rounded text-xs font-semibold">Next.js</span>
-            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">Node.js/Express</span>
-            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-semibold">Electron</span>
-            <span class="bg-sky-100 text-sky-800 px-2 py-1 rounded text-xs font-semibold">Sqlite</span>
-          </div>
-        </div>
+      </div>
+      
+      <!-- Carousel Controls -->
+      <div class="carousel-controls">
+        <button 
+          class="carousel-button" 
+          on:click={prevSlide}
+          disabled={currentSlide === 0}
+          aria-label="Previous project"
+        >
+          ←
+        </button>
+        <button 
+          class="carousel-button" 
+          on:click={nextSlide}
+          disabled={currentSlide === totalSlides - 1}
+          aria-label="Next project"
+        >
+          →
+        </button>
+      </div>
+      
+      <!-- Carousel Indicators -->
+      <div class="carousel-indicators">
+        {#each Array(totalSlides) as _, index}
+          <button
+            class="carousel-indicator {currentSlide === index ? 'active' : ''}"
+            on:click={() => goToSlide(index)}
+            aria-label="Go to project {index + 1}"
+          ></button>
+        {/each}
       </div>
     </div>
   </section>
 
   <!-- Contact -->
-  <section id="contact" class="py-16 px-6">
+  <section id="contact" class="py-16 px-6 reserved-space-contact">
     <div class="max-w-4xl mx-auto text-center">
-      <h1 class="text-4xl text-red-800 font-bold mb-6">Contact</h1>
-      <p class="text-lg">Email: <a href="mailto:razeball@rzcorpsr.com" class="text-blue-600 hover:underline">razeball@rzcorpsr.com</a></p>
-      <p class="text-lg">Phone: (+507) 6837-8259</p>
-      <div class="flex gap-4 mt-4 justify-center">
-        <a href="https://github.com/Razeball" target="_blank" class="hover:text-red-800">
-          <img src={github} alt="GitHub" class="w-6 h-6">
-        </a>
-        <a href="https://www.linkedin.com/in/said-rivera-444992308" target="_blank" class="hover:text-red-800">
-          <img src={linkedin} alt="LinkedIn" class="w-6 h-6">
-        </a>
+      <h1 class="text-4xl text-red-800 font-bold mb-6 reveal">Contact</h1>
+      <div class="reveal">
+        <p class="text-lg mb-2 no-shift visible">Email: <a href="mailto:razeball@rzcorpsr.com" class="text-blue-600 hover:underline transition-all duration-300 hover:text-blue-800">razeball@rzcorpsr.com</a></p>
+        <p class="text-lg mb-4 no-shift visible">Phone: (+507) 6837-8259</p>
+        <div class="flex gap-4 mt-4 justify-center no-shift visible">
+          <a href="https://github.com/Razeball" target="_blank" class="hover:text-red-800 transition-all duration-300 transform hover:scale-125 hover:-rotate-12">
+            <img src={assets.github} alt="GitHub" class="w-6 h-6">
+          </a>
+          <a href="https://www.linkedin.com/in/said-rivera-444992308" target="_blank" class="hover:text-red-800 transition-all duration-300 transform hover:scale-125 hover:rotate-12">
+            <img src={assets.linkedin} alt="LinkedIn" class="w-6 h-6">
+          </a>
+        </div>
       </div>
     </div>
   </section>
