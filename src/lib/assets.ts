@@ -17,6 +17,7 @@ import docker from "../routes/assets/docker.svg";
 import nodejs from "../routes/assets/nodejs.svg";
 import mcp from "../routes/assets/mcp.png";
 import machinelearning from "../routes/assets/machinelearning.svg";
+import ticketManager from "../routes/assets/ticketmanager.png";
 
 export const assets = {
   profile,
@@ -37,7 +38,8 @@ export const assets = {
   docker,
   nodejs,
   mcp,
-  machinelearning
+  machinelearning,
+  ticketManager
 } as const;
 
 export type AssetKey = keyof typeof assets;

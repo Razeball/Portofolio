@@ -12,7 +12,7 @@
 
 	
 	let currentSlide = 0;
-	let totalSlides = 3;
+	let totalSlides = 4;
 	let carouselInterval: number;
 
 	
@@ -532,8 +532,37 @@
               </div>
             </div>
           </div>
+          <!-- Ticket Manager Backend -->
+          <div class="carousel-slide">
+            <div class="bg-white rounded-lg shadow-lg p-8 project-card"
+                 role="button"
+                 tabindex="0"
+                 on:click={() => handleProjectClick('https://github.com/Razeball/TicketManager')}
+                 on:keypress={(e) => handleKeyPress(e, 'https://github.com/Razeball/TicketManager')}>
+              <div class="flex flex-col lg:flex-row items-center gap-8">
+                <div class="lg:w-1/2">
+                  <h2 class="text-3xl font-bold mb-4 text-center lg:text-left text-red-800">Ticket Manager</h2>
+                  <p class="text-xl text-gray-700 mb-4 text-center lg:text-left">Backend API for Ticket Management</p>
+                  <p class="text-gray-600 mb-6 leading-relaxed">
+                    A backend made with .NET Core for managing tickets in a support system. 
+                    Features include ticket creation, assignment, status tracking, and user management.
+                  </p>
+                  <div class="flex flex-wrap gap-2 justify-center lg:justify-start">
+                    <span class="bg-black/10 text-black/80 px-3 py-1 rounded-full text-sm font-semibold">.NET</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">Entity Framework Core</span>
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold">Clean Architecture</span>
+                    <span class="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-semibold">Paypal</span>
+                  </div>
+                </div>
+                <div class="lg:w-1/2">
+                  <img src={assets.ticketManager} alt="Ticket Manager Backend" class="rounded-lg shadow-xl w-full max-w-md mx-auto hover-lift">
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
       
       <!-- Carousel Controls -->
       <div class="carousel-controls">
