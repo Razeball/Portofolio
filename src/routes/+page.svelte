@@ -187,6 +187,44 @@
 			handleProjectClick(url);
 		}
 	}
+
+
+	let formData = {
+		name: '',
+		email: '',
+		subject: '',
+		message: ''
+	};
+	let formStatus: 'idle' | 'sending' | 'success' | 'error' = 'idle';
+	let formMessage = '';
+
+	async function handleSubmit(event: Event) {
+		event.preventDefault();
+		formStatus = 'sending';
+		formMessage = '';
+
+		try {
+
+			const mailtoLink = `mailto:razeball@rzcorpsr.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
+				`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+			)}`;
+			
+			window.location.href = mailtoLink;
+			
+			formStatus = 'success';
+			formMessage = 'Opening your email client...';
+			
+
+			setTimeout(() => {
+				formData = { name: '', email: '', subject: '', message: '' };
+				formStatus = 'idle';
+				formMessage = '';
+			}, 3000);
+		} catch (error) {
+			formStatus = 'error';
+			formMessage = 'There was an error. Please try again or email directly.';
+		}
+	}
 </script>
 
 <main class="font-sans">
@@ -548,9 +586,9 @@
                     Features include ticket creation, assignment, status tracking, and user management.
                   </p>
                   <div class="flex flex-wrap gap-2 justify-center lg:justify-start">
-                    <span class="bg-black/10 text-black/80 px-3 py-1 rounded-full text-sm font-semibold">.NET</span>
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold">.NET</span>
                     <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">Entity Framework Core</span>
-                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold">Clean Architecture</span>
+                    <span class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-semibold">Clean Architecture</span>
                     <span class="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-semibold">Paypal</span>
                   </div>
                 </div>
@@ -598,19 +636,161 @@
   </section>
 
   <!-- Contact -->
-  <section id="contact" class="py-16 px-6 reserved-space-contact">
-    <div class="max-w-4xl mx-auto text-center">
-      <h1 class="text-4xl text-red-800 font-bold mb-6 reveal">Contact</h1>
-      <div class="reveal">
-        <p class="text-lg mb-2 no-shift visible">Email: <a href="mailto:razeball@rzcorpsr.com" class="text-blue-600 hover:underline transition-all duration-300 hover:text-blue-800">razeball@rzcorpsr.com</a></p>
-        <p class="text-lg mb-4 no-shift visible">Phone: (+507) 6837-8259</p>
-        <div class="flex gap-4 mt-4 justify-center no-shift visible">
-          <a href="https://github.com/Razeball" target="_blank" class="hover:text-red-800 transition-all duration-300 transform hover:scale-125 hover:-rotate-12">
-            <img src={assets.github} alt="GitHub" class="w-6 h-6">
-          </a>
-          <a href="https://www.linkedin.com/in/said-rivera-444992308" target="_blank" class="hover:text-red-800 transition-all duration-300 transform hover:scale-125 hover:rotate-12">
-            <img src={assets.linkedin} alt="LinkedIn" class="w-6 h-6">
-          </a>
+  <section id="contact" class="py-16 px-6 bg-stone-100 reserved-space-contact">
+    <div class="max-w-5xl mx-auto">
+      <h1 class="text-4xl text-center text-red-800 font-bold mb-12 reveal">Get In Touch</h1>
+      
+      <div class="grid lg:grid-cols-2 gap-12">
+        <!-- Contact Information -->
+        <div class="space-y-8">
+          <div class="reveal">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Contact Information</h2>
+            <p class="text-gray-600 mb-8">
+              Feel free to reach out! I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+            </p>
+          </div>
+          
+          <div class="space-y-6 reveal">
+            <div class="flex items-start gap-4 bg-white p-4 rounded-lg shadow-md hover-lift">
+              <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg text-gray-800">Email</h3>
+                <a href="mailto:razeball@rzcorpsr.com" class="text-blue-600 hover:text-blue-800 transition-colors">
+                  razeball@rzcorpsr.com
+                </a>
+              </div>
+            </div>
+            
+            <div class="flex items-start gap-4 bg-white p-4 rounded-lg shadow-md hover-lift">
+              <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg text-gray-800">Phone</h3>
+                <a href="tel:+50768378259" class="text-gray-600 hover:text-gray-800 transition-colors">
+                  (+507) 6837-8259
+                </a>
+              </div>
+            </div>
+            
+            <div class="flex items-start gap-4 bg-white p-4 rounded-lg shadow-md hover-lift">
+              <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg text-gray-800">Location</h3>
+                <p class="text-gray-600">Panama</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="reveal">
+            <h3 class="font-bold text-lg text-gray-800 mb-4">Follow Me</h3>
+            <div class="flex gap-4">
+              <a href="https://github.com/Razeball" target="_blank" 
+                 class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-red-800 hover:shadow-lg transition-all duration-300 transform hover:scale-110 group">
+                <img src={assets.github} alt="GitHub" class="w-6 h-6 group-hover:brightness-0 group-hover:invert transition-all">
+              </a>
+              <a href="https://www.linkedin.com/in/said-rivera-444992308" target="_blank" 
+                 class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-red-800 hover:shadow-lg transition-all duration-300 transform hover:scale-110 group">
+                <img src={assets.linkedin} alt="LinkedIn" class="w-6 h-6 group-hover:brightness-0 group-hover:invert transition-all">
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Contact Form -->
+        <div class="reveal">
+          <div class="bg-white p-8 rounded-lg shadow-xl">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Send Me a Message</h2>
+            
+            <form on:submit={handleSubmit} class="space-y-6">
+              <div>
+                <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
+                  Your Name *
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  bind:value={formData.name}
+                  required
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all outline-none"
+                  placeholder="John Doe"
+                />
+              </div>
+              
+              <div>
+                <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
+                  Your Email *
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  bind:value={formData.email}
+                  required
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all outline-none"
+                  placeholder="john@example.com"
+                />
+              </div>
+              
+              <div>
+                <label for="subject" class="block text-sm font-semibold text-gray-700 mb-2">
+                  Subject *
+                </label>
+                <input
+                  type="text"
+                  id="subject"
+                  bind:value={formData.subject}
+                  required
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all outline-none"
+                  placeholder="Project Inquiry"
+                />
+              </div>
+              
+              <div>
+                <label for="message" class="block text-sm font-semibold text-gray-700 mb-2">
+                  Message *
+                </label>
+                <textarea
+                  id="message"
+                  bind:value={formData.message}
+                  required
+                  rows="5"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all outline-none resize-none"
+                  placeholder="Tell me about your project..."
+                ></textarea>
+              </div>
+              
+              <button
+                type="submit"
+                disabled={formStatus === 'sending'}
+                class="w-full bg-red-800 text-white px-6 py-3 rounded-lg hover:bg-red-700 active:bg-red-900 transition-all duration-300 transform hover:scale-105 hover:shadow-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                {#if formStatus === 'sending'}
+                  Sending...
+                {:else if formStatus === 'success'}
+                  Message Sent!
+                {:else}
+                  Send Message
+                {/if}
+              </button>
+              
+              {#if formMessage}
+                <div class="text-center p-3 rounded-lg {formStatus === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                  {formMessage}
+                </div>
+              {/if}
+            </form>
+          </div>
         </div>
       </div>
     </div>
