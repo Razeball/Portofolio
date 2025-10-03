@@ -1,6 +1,5 @@
 <script lang="ts">
 	import '../app.css';
-	import { assets } from '../lib/assets';
 	import { onMount, onDestroy } from 'svelte';
 
 	let activeSection = 'home';
@@ -232,7 +231,7 @@
   <div class="bg-stone-200 shadow-md mb-4 sticky top-0 z-50 navbar-slide">
     <nav class="flex justify-between items-center p-4 max-w-7xl mx-auto">
       <a href="#home" class="flex items-center gap-2 hover-lift">
-        <img src={assets.logo} alt="Logo" class="w-10 h-10 {mounted ? 'bounce-in' : ''}">
+        <img src={"/Logo.svg"} alt="Logo" class="w-10 h-10 {mounted ? 'bounce-in' : ''}">
         <span class="text-xl font-bold text-red-800 {mounted ? 'slide-in-left delay-200' : ''}">Said Rivera</span>
       </a>
       <div class="flex gap-5 text-sm sm:text-base">
@@ -267,15 +266,15 @@
         </a>
         <div class="flex gap-4 mt-4 no-shift {mounted ? 'visible fade-in delay-800' : ''}">
           <a href="https://github.com/Razeball" target="_blank" class="hover:text-red-800 transition-all duration-300 transform hover:scale-125 hover:-rotate-12">
-            <img src={assets.github} alt="GitHub" class="w-6 h-6">
+            <img src={"/github.svg"} alt="GitHub" class="w-6 h-6">
           </a>
           <a href="https://www.linkedin.com/in/said-rivera-444992308" target="_blank" class="hover:text-red-800 transition-all duration-300 transform hover:scale-125 hover:rotate-12">
-            <img src={assets.linkedin} alt="LinkedIn" class="w-6 h-6">
+            <img src={"/linkedin.png"} alt="LinkedIn" class="w-6 h-6">
           </a>
         </div>
       </div>
       <div class="md:w-1/2">
-        <img src={assets.profile} alt="Profile" class="rounded shadow-md max-h-96 w-full object-cover hover-lift slide-in-from-right {showHeroImage ? 'visible' : ''}">
+        <img src={"/Profile.jpg"} alt="Profile" class="rounded shadow-md max-h-96 w-full object-cover hover-lift slide-in-from-right {showHeroImage ? 'visible' : ''}">
       </div>
     </div>
   </section>
@@ -350,7 +349,7 @@
         </div>
         
         <div class="relative no-shift {aboutVisible ? 'visible slide-in-right delay-300' : ''}">
-          <img src={assets.code} alt="Code" class="w-full h-96 object-cover rounded-lg shadow-xl hover-lift">
+          <img src={"/code.png"} alt="Code" class="w-full h-96 object-cover rounded-lg shadow-xl hover-lift">
           <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
         </div>
       </div>
@@ -403,57 +402,57 @@
         <div class="skills-container {skillsExpanded ? 'expanded' : ''}">
           <div class="skills-grid {skillsExpanded ? 'visible' : ''} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
             <div class="bg-white border rounded shadow p-4 skill-card hover:border-rose-800 transition hover:bg-rose-100 hover:border-2">
-              <img src={assets.angular} alt="Angular" class="w-6 h-6">
+              <img src={"/angular.svg"} alt="Angular" class="w-6 h-6">
               <p class="font-bold text-lg">Angular</p>
               <p class="text-sm text-gray-600">Frontend framework</p>
             </div>
             <div class="bg-white border rounded shadow p-4 skill-card hover:border-blue-800 transition hover:bg-blue-100 hover:border-2">
-              <img src={assets.react} alt="React" class="w-6 h-6">
+              <img src={"/react.svg"} alt="React" class="w-6 h-6">
               <p class="font-bold text-lg">React</p>
               <p class="text-sm text-gray-600">Frontend library</p>
             </div>
             <div class="bg-white border rounded shadow p-4 skill-card hover:border-orange-600 transition hover:bg-orange-100 hover:border-2">
-              <img src={assets.svelte} alt="Svelte" class="w-6 h-6">
+              <img src={"/svelte.svg"} alt="Svelte" class="w-6 h-6">
               <p class="font-bold text-lg">Svelte</p>
               <p class="text-sm text-gray-600">Frontend framework</p>
             </div>
             <div class="bg-white border rounded shadow p-4 skill-card hover:border-green-800 transition hover:bg-green-100 hover:border-2">
-              <img src={assets.websocket} alt="WebSockets" class="w-6 h-6">
+              <img src={"/websocket.svg"} alt="WebSockets" class="w-6 h-6">
               <p class="font-bold text-lg">WebSockets</p>
               <p class="text-sm text-gray-600">Real-time communication</p>
             </div>
             <div class="bg-white border rounded shadow p-4 skill-card hover:border-purple-800 transition hover:bg-purple-100 hover:border-2">
-              <img src={assets.redux} alt="Redux" class="w-6 h-6">
+              <img src={"/redux.svg"} alt="Redux" class="w-6 h-6">
               <p class="font-bold text-lg">Redux</p>
               <p class="text-sm text-gray-600">State management</p>
             </div>
             <div class="bg-white border rounded shadow p-4 skill-card hover:border-amber-800 transition hover:bg-amber-100 hover:border-2">
-              <img src={assets.zustand} alt="Zustand" class="w-6 h-6">
+              <img src={"/zustand.svg"} alt="Zustand" class="w-6 h-6">
               <p class="font-bold text-lg">Zustand</p>
               <p class="text-sm text-gray-600">State management</p>
             </div>
             <div class="bg-white border rounded shadow p-4 skill-card hover:border-black transition hover:bg-black/25 hover:border-2">
-              <img src={assets.nodejs} alt="Node.js" class="w-6 h-6">
+              <img src={"/nodejs.svg"} alt="Node.js" class="w-6 h-6">
               <p class="font-bold text-lg">Node.js / Express</p>
               <p class="text-sm text-gray-600">Backend development</p>
             </div>
             <div class="bg-white border rounded shadow p-4 skill-card hover:border-purple-800 transition hover:bg-purple-100 hover:border-2">
-              <img src={assets.dotnet} alt=".NET" class="w-6 h-6">
+              <img src={"/dotnet.svg"} alt=".NET" class="w-6 h-6">
               <p class="font-bold text-lg">.NET</p>
               <p class="text-sm text-gray-600">Backend development</p>
             </div>
             <div class="bg-white border rounded shadow p-4 skill-card hover:border-sky-800 transition hover:bg-sky-100 hover:border-2">
-              <img src={assets.docker} alt="Docker" class="w-6 h-6">
+              <img src={"/docker.svg"} alt="Docker" class="w-6 h-6">
               <p class="font-bold text-lg">Docker</p>
               <p class="text-sm text-gray-600">Containerization</p>
             </div>
             <div class="bg-white border rounded shadow p-4 skill-card hover:border-indigo-800 transition hover:bg-indigo-100 hover:border-2">
-              <img src={assets.mcp} alt="MCP" class="w-6 h-6">
+              <img src={"/mcp.png"} alt="MCP" class="w-6 h-6">
               <p class="font-bold text-lg">MCP</p>
               <p class="text-sm text-gray-600">Model Context Protocol</p>
             </div>
             <div class="bg-white border rounded shadow p-4 skill-card hover:border-gray-800 transition hover:bg-gray-100 hover:border-2">
-              <img src={assets.machinelearning} alt="Machine Learning" class="w-6 h-6">
+              <img src={"/machinelearning.svg"} alt="Machine Learning" class="w-6 h-6">
               <p class="font-bold text-lg">Machine Learning</p>
               <p class="text-sm text-gray-600">Deep Learning | Python | TensorFlow</p>
             </div>
@@ -482,7 +481,7 @@
       <div class="carousel-container relative">
         <div 
           class="carousel-track"
-          style="transform: translateX(-{currentSlide * 33.333}%)"
+          style="transform: translateX(-{currentSlide * 25}%)"
           role="region"
           aria-label="Projects carousel"
           on:mouseenter={stopCarousel}
@@ -511,7 +510,7 @@
                   </div>
                 </div>
                 <div class="lg:w-1/2">
-                  <img src={assets.prodoku} alt="ProDoku Kanban App" class="rounded-lg shadow-xl w-full max-w-md mx-auto hover-lift">
+                  <img src={"/ProDoku.png"} alt="ProDoku Kanban App" class="rounded-lg shadow-xl w-full max-w-md mx-auto hover-lift">
                 </div>
               </div>
             </div>
@@ -536,7 +535,7 @@
                   </div>
                 </div>
                 <div class="lg:w-1/2">
-                  <img src={assets.sb} alt="SB E-commerce App" class="rounded-lg shadow-xl w-full max-w-md mx-auto hover-lift">
+                  <img src={"/SB.png"} alt="SB E-commerce App" class="rounded-lg shadow-xl w-full max-w-md mx-auto hover-lift">
                 </div>
               </div>
             </div>
@@ -550,7 +549,7 @@
                  on:click={() => handleProjectClick('https://github.com/Razeball/TeacherGraderExe')}
                  on:keypress={(e) => handleKeyPress(e, 'https://github.com/Razeball/TeacherGraderExe')}>
               <div class="flex flex-col lg:flex-row items-center gap-8">
-                <div class="lg:w-1/2">
+       <div class="lg:w-1/2">
                   <h2 class="text-3xl font-bold mb-4 text-center lg:text-left text-red-800">Teacher Grader</h2>
                   <p class="text-xl text-gray-700 mb-4 text-center lg:text-left">Desktop Grading Application</p>
                   <p class="text-gray-600 mb-6 leading-relaxed">
@@ -565,7 +564,7 @@
                   </div>
                 </div>
                 <div class="lg:w-1/2">
-                  <img src={assets.teacherGrader} alt="Teacher Grader App" class="rounded-lg shadow-xl w-full max-w-md mx-auto hover-lift">
+                  <img src={"/teachergrader.png"} alt="Teacher Grader App" class="rounded-lg shadow-xl w-full max-w-md mx-auto hover-lift">
                 </div>
               </div>
             </div>
@@ -593,7 +592,7 @@
                   </div>
                 </div>
                 <div class="lg:w-1/2">
-                  <img src={assets.ticketManager} alt="Ticket Manager Backend" class="rounded-lg shadow-xl w-full max-w-md mx-auto hover-lift">
+                  <img src={"/ticketManager.png"} alt="Ticket Manager Backend" class="rounded-lg shadow-xl w-full max-w-md mx-auto hover-lift">
                 </div>
               </div>
             </div>
@@ -698,14 +697,15 @@
             <div class="flex gap-4">
               <a href="https://github.com/Razeball" target="_blank" 
                  class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-red-800 hover:shadow-lg transition-all duration-300 transform hover:scale-110 group">
-                <img src={assets.github} alt="GitHub" class="w-6 h-6 group-hover:brightness-0 group-hover:invert transition-all">
+                <img src={"/github.svg"} alt="GitHub" class="w-6 h-6 group-hover:brightness-0 group-hover:invert transition-all">
               </a>
               <a href="https://www.linkedin.com/in/said-rivera-444992308" target="_blank" 
                  class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-red-800 hover:shadow-lg transition-all duration-300 transform hover:scale-110 group">
-                <img src={assets.linkedin} alt="LinkedIn" class="w-6 h-6 group-hover:brightness-0 group-hover:invert transition-all">
+                <img src={"/linkedin.svg"} alt="LinkedIn" class="w-6 h-6 group-hover:brightness-0 group-hover:invert transition-all">
               </a>
             </div>
           </div>
+          
         </div>
         
         <!-- Contact Form -->
